@@ -93,7 +93,21 @@ class Youtube {
     }
 
     // get video response
-    var response = await StreamController(YoutubeHttpClient()).getPlayerResponse(VideoId.fromString(id), {});
+    var controller = StreamController(YoutubeHttpClient());
+    var response = await controller.getPlayerResponse(VideoId.fromString(id), {
+    'context': {
+      'client': {
+        'clientName': 'ANDROID',
+        'clientVersion': '19.09.37',
+        'androidSdkVersion': 30,
+        'userAgent':
+            'com.google.android.youtube/19.09.37 (Linux; U; Android 11) gzip',
+        'hl': 'en',
+        'timeZone': 'UTC',
+        'utcOffsetMinutes': 0,
+      },
+    },
+  });
 
     Set<ZStream> data = response.hlsManifestUrl?.isNotEmpty == true
         ? {

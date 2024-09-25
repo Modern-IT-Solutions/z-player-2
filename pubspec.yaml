@@ -32,7 +32,7 @@ dependencies:
   media_kit_libs_video:
   media_kit_libs_macos_video:
   media_kit_libs_ios_video:
-  youtube_explode_dart: ^2.0.2
+  youtube_explode_dart: ^2.2.2
   shared_preferences: ^2.2.0
   logging: ^1.2.0
 
