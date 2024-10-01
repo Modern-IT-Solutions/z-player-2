@@ -8,7 +8,8 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_explode_dart/src/videos/streams/stream_controller.dart';
 // ignore: implementation_imports
 import 'package:youtube_explode_dart/src/reverse_engineering/models/stream_info_provider.dart';
-
+// kisweb
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'models.dart';
 
 /// [Youtube] class for getting youtube video information and streams.
@@ -94,20 +95,36 @@ class Youtube {
 
     // get video response
     var controller = StreamController(YoutubeHttpClient());
-    var response = await controller.getPlayerResponse(VideoId.fromString(id), {
-    'context': {
-      'client': {
-        'clientName': 'ANDROID',
-        'clientVersion': '19.09.37',
-        'androidSdkVersion': 30,
-        'userAgent':
-            'com.google.android.youtube/19.09.37 (Linux; U; Android 11) gzip',
-        'hl': 'en',
-        'timeZone': 'UTC',
-        'utcOffsetMinutes': 0,
-      },
-    },
-  });
+    var response = await controller.getPlayerResponse(
+        VideoId.fromString(id),
+        kIsWeb
+            ? {
+                'context': {
+                  'client': {
+                    'clientName': 'ANDROID_CREATOR',
+                    'clientVersion': '24.24.100',
+                    'androidSdkVersion': 30,
+                    // 'userAgent':
+                    // 'com.google.android.youtube/17.36.4 (Linux; U; Android 12; GB) gzip',
+                    'hl': 'en',
+                    'gl': 'US',
+                    'utcOffsetMinutes': 0,
+                  },
+                },
+              }
+            : {
+                'context': {
+                  'client': {
+                    'clientName': 'ANDROID',
+                    'clientVersion': '19.09.37',
+                    'androidSdkVersion': 30,
+                    'userAgent': 'com.google.android.youtube/19.09.37 (Linux; U; Android 11) gzip',
+                    'hl': 'en',
+                    'timeZone': 'UTC',
+                    'utcOffsetMinutes': 0,
+                  },
+                },
+              });
 
     Set<ZStream> data = response.hlsManifestUrl?.isNotEmpty == true
         ? {
