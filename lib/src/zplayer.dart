@@ -193,6 +193,7 @@ class _ZPlayerState extends State<ZPlayer> with AutomaticKeepAliveClientMixin {
   }
 
   Set<ZVideoStream> get videos {
+    return muxeds;
     return widget.streams.where((element) => element is ZVideoStream).cast<ZVideoStream>().toSet();
   }
 
