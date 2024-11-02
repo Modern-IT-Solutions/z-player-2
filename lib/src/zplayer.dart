@@ -68,10 +68,10 @@ class _ZPlayerState extends State<ZPlayer> with AutomaticKeepAliveClientMixin {
     if (videos.isNotEmpty) {
       // select 720p if exists if not select random video
       var selected = videos.firstWhere(
-        (element) => element.resolution.height >= 720,
+        (element) => element.resolution.height >= 300,
         orElse: () {
           var list = videos.toList();
-          return list[Random().nextInt(list.length)];
+          return list.first;
         },
       );
       await openStream(selected);
@@ -194,7 +194,9 @@ class _ZPlayerState extends State<ZPlayer> with AutomaticKeepAliveClientMixin {
 
   Set<ZVideoStream> get videos {
     return muxeds;
-    return widget.streams.where((element) => element is ZVideoStream).cast<ZVideoStream>().toSet();
+    return widget.streams.where((element) => element is ZVideoStream && 
+      element.resolution.height <= 720
+    ).cast<ZVideoStream>().toSet();
   }
 
   Set<ZAudioStream> get audios {
@@ -363,7 +365,7 @@ class _ZPlayerState extends State<ZPlayer> with AutomaticKeepAliveClientMixin {
             seedColor: color ?? Colors.white,
             brightness: Brightness.dark,
           ),
-          platform: !kIsWeb && !Platform.isIOS ? TargetPlatform.windows : TargetPlatform.iOS,
+          platform: TargetPlatform.iOS, // !kIsWeb && !Platform.isIOS ? TargetPlatform.windows : TargetPlatform.iOS,
         ),
       child: MaterialDesktopVideoControlsTheme(
         normal: MaterialDesktopVideoControlsThemeData(

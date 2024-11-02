@@ -97,34 +97,8 @@ class Youtube {
     var controller = StreamController(YoutubeHttpClient());
     var response = await controller.getPlayerResponse(
         VideoId.fromString(id),
-        kIsWeb
-            ? {
-                'context': {
-                  'client': {
-                    'clientName': 'ANDROID_CREATOR',
-                    'clientVersion': '24.24.100',
-                    'androidSdkVersion': 30,
-                    // 'userAgent':
-                    // 'com.google.android.youtube/17.36.4 (Linux; U; Android 12; GB) gzip',
-                    'hl': 'en',
-                    'gl': 'US',
-                    'utcOffsetMinutes': 0,
-                  },
-                },
-              }
-            : {
-                'context': {
-                  'client': {
-                    'clientName': 'ANDROID',
-                    'clientVersion': '19.09.37',
-                    'androidSdkVersion': 30,
-                    'userAgent': 'com.google.android.youtube/19.09.37 (Linux; U; Android 11) gzip',
-                    'hl': 'en',
-                    'timeZone': 'UTC',
-                    'utcOffsetMinutes': 0,
-                  },
-                },
-              });
+        YoutubeApiClient.safari,
+      );
 
     Set<ZStream> data = response.hlsManifestUrl?.isNotEmpty == true
         ? {
@@ -154,7 +128,7 @@ class Youtube {
                     live: isLive,
                     src: stream.url.toString(),
                     resolution: resolution,
-                    qualityLabel: stream.qualityLabel,
+                    qualityLabel: stream.qualityLabel ?? "0p",
                   );
                 }
                 return ZVideoStream(
@@ -164,13 +138,13 @@ class Youtube {
                     stream.videoWidth?.toDouble() ?? 1080,
                     stream.videoHeight?.toDouble() ?? 1080,
                   ),
-                  qualityLabel: stream.qualityLabel,
+                  qualityLabel: stream.qualityLabel ?? "0p",
                 );
               } else if (stream.audioCodec?.isNotEmpty == true) {
                 return ZAudioStream(
                   live: stream.qualityLabel == "DASH",
                   src: stream.url.toString(),
-                  qualityLabel: stream.qualityLabel,
+                  qualityLabel: stream.qualityLabel ?? "0p",
                 );
               } else {
                 throw Exception("Unknown stream type");
